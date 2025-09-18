@@ -10,5 +10,4 @@ Halaman utama
 - `checkout.html` — Halaman ringkasan checkout
 - `profile.html`, `login.html`, `signup.html`, `history.html` — Halaman akun dan histori
 
-Akses di sini:
-- zxhiend.github.io/TK23023_Kuis1_535240041
+Akses di [SINI](zxhiend.github.io/TK23023_Kuis1_535240041)
