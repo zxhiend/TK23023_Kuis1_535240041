@@ -81,7 +81,7 @@
           <input type="number" name="tahun" placeholder="Tahun" required style="flex:1; padding:0.5rem; border-radius:8px; border:1px solid #d1d5db;">
           <input type="number" name="harga" placeholder="Harga (IDR)" required style="flex:1; padding:0.5rem; border-radius:8px; border:1px solid #d1d5db;">
         </div>
-        <button type="button" id="carCompareBtn" class="btn-01" style="width:100%;">Bandingkan Sekarang</button>
+        <button type="button" id="carCompareBtn" class="btn-01" style="width:100%;">Bandingkan Sekarang &nbsp; →</button>
         <div id="carCompareResult" style="display:none; margin-top:0.75rem;"></div>
       </form>
     </section>
@@ -111,6 +111,27 @@
           <p>Perlindungan jiwa bagi Anda dan keluarga.</p>
           <a href="jiwa.html" class="btn-01">Lihat</a>
         </div>
+      </div>
+    </section>
+    <!-- Manfaat Asuransi Mobil -->
+    <section style="margin-top:3rem;">
+      <h2 style="text-align:center; color:#2563eb; margin-bottom:1rem;">Manfaat Asuransi Mobil</h2>
+      <div class="benefit-list">
+        <div class="benefit-item">Perlindungan terhadap kecelakaan & kerusakan</div>
+        <div class="benefit-item">Ganti rugi atas pencurian kendaraan</div>
+        <div class="benefit-item">Layanan derek & bantuan darurat 24/7</div>
+        <div class="benefit-item">Perlindungan pihak ketiga dan hukum</div>
+        <div class="benefit-item">Pilihan polis sesuai usia & nilai kendaraan</div>
+      </div>
+    </section>
+
+    <!-- Klien Perusahaan (Client Slider for Mobil) -->
+    <section class="client-slider">
+      <h2>Klien Kami — Perusahaan</h2>
+      <button class="slider-btn left" data-dir="-1">&#8592;</button>
+      <button class="slider-btn right" data-dir="1">&#8594;</button>
+      <div class="client-list" id="clientList" data-type="mobil">
+        <!-- clients filled by JS -->
       </div>
     </section>
   </main>

@@ -454,3 +454,101 @@ label { display:inline-flex; align-items:center; }
 /* Beranda */
 .top-home { margin-bottom:0.5rem; font-size:1.05rem; font-weight:700; padding:0.6rem 0.5rem; }
 .top-home .sidenav-icon { margin-right:0.6rem; }
+
+/* Benefit list (shared with kesehatan page) */
+.benefit-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+.benefit-item {
+  background: #efefef;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+  padding: 1.5rem;
+  text-align: center;
+  color: #2563eb;
+  font-weight: 500;
+  font-size: 1.05rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.2s;
+}
+.benefit-item:hover {
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15);
+  background-color: #eef5ff;
+  transition: 0.3s ease;
+}
+
+/* Client slider (shared) */
+.client-slider {
+  /* increase width so the slider forms a larger card like other pages */
+  max-width: 920px;
+  margin: 3rem auto 0 auto;
+  position: relative;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 2rem 1.5rem 1.5rem 1.5rem;
+  overflow: hidden;
+}
+.client-slider h2 { text-align:center; color:#2563eb; margin-bottom:1rem; }
+.client-list { display:flex; align-items:center; justify-content:center; gap:2rem; transition: transform 0.4s cubic-bezier(0.22,0.61,0.36,1); }
+.client-card {
+  background: linear-gradient(180deg, #ffffff, #fbfdff);
+  border-radius: 10px;
+  border: 1px solid rgba(37,99,235,0.06);
+  padding: 1.25rem 1.5rem;
+  min-width: 220px;
+  text-align: center;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 600;
+  display:flex; flex-direction:column; align-items:center; gap:0.6rem;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.client-card:hover { transform: translateY(-6px); box-shadow: 0 8px 20px rgba(16,24,40,0.06); }
+.client-avatar { width:80px; height:80px; border-radius:12px; background:#f1f5f9; margin-bottom:0.35rem; object-fit:cover; display:block; }
+.client-avatar.company { border-radius:6px; width:96px; height:56px; object-fit:contain; background:transparent; }
+.slider-btn { position:absolute; top:50%; transform:translateY(-50%); background:#2563eb; color:#fff; border:none; border-radius:50%; width:36px; height:36px; font-size:1.5rem; cursor:pointer; z-index:2; transition:background 0.2s; }
+.slider-btn:hover { background:#1e40af; }
+.slider-btn.left { left:8px; }
+.slider-btn.right { right:8px; }
+
+@media (max-width:700px) {
+  .client-list { gap:1rem; }
+  .client-card { min-width:140px; font-size:0.95rem; }
+  .client-slider { padding:1rem 0.5rem 1rem 0.5rem; }
+}
+
+/* Client list layout tweaks */
+.client-list { display:flex; align-items:center; justify-content:center; gap:1.25rem; padding: 0.5rem 0; }
+.client-list .client-card div { line-height:1.1; }
+.client-card small { color: #6b7280; display:block; font-weight:400; font-size:0.85rem; }
+
+/* Make company avatars slightly different to emphasize logos */
+.client-card .client-avatar + div { font-weight:700; }
+
+  /* Unified disabled button visual state for compare buttons */
+  .btn-disabled,
+  .btn-01.btn-disabled {
+    opacity: 0.48 !important;
+    pointer-events: none;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Inline form-level error message shown above the form */
+  .form-error {
+    background: #fff7f7;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    padding: 0.6rem 0.75rem;
+    border-radius: 6px;
+    margin-bottom: 0.75rem;
+    font-size: 0.95rem;
+  }

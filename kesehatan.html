@@ -5,115 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Asuransi Kesehatan</title>
     <link rel="stylesheet" href="css/style.css" />
-    <style>
-      .benefit-list {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 1.5rem;
-        margin: 2rem 0;
-      }
-      .benefit-item {
-        background: #efefef;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
-        padding: 1.5rem;
-        text-align: center;
-        color: #2563eb;
-        font-weight: 500;
-        font-size: 1.05rem;
-        text-align: left;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        transition: box-shadow 0.2s;
-      }
-      .benefit-item:hover {
-        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15);
-        background-color: #eef5ff;
-        transition: 0.3s ease;
-      }
-      .client-slider {
-        max-width: 600px;
-        margin: 3rem auto 0 auto;
-        position: relative;
-        background: #fff;
-        border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-        padding: 2rem 1.5rem 1.5rem 1.5rem;
-        overflow: hidden;
-      }
-      .client-slider h2 {
-        text-align: center;
-        color: #2563eb;
-        margin-bottom: 1rem;
-      }
-      .client-list {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 2rem;
-        transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
-      }
-      .client-card {
-        background: #f3f4f6;
-        border-radius: 8px;
-        box-shadow: 0 1px 4px rgba(37, 99, 235, 0.08);
-        padding: 1rem 1.5rem;
-        min-width: 180px;
-        text-align: center;
-        color: #1f2937;
-        font-size: 1rem;
-        font-weight: 500;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      .client-avatar {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        background: #2563eb22;
-        margin-bottom: 0.5rem;
-        object-fit: cover;
-      }
-      .slider-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: #2563eb;
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        width: 36px;
-        height: 36px;
-        font-size: 1.5rem;
-        cursor: pointer;
-        z-index: 2;
-        transition: background 0.2s;
-      }
-      .slider-btn:hover {
-        background: #1e40af;
-      }
-      .slider-btn.left {
-        left: 8px;
-      }
-      .slider-btn.right {
-        right: 8px;
-      }
-
-      @media (max-width: 700px) {
-        .client-list {
-          gap: 1rem;
-        }
-        .client-card {
-          min-width: 140px;
-          font-size: 0.95rem;
-        }
-        .client-slider {
-          padding: 1rem 0.5rem 1rem 0.5rem;
-        }
-      }
-    </style>
+    <!-- styles are in css/style.css (shared across pages) -->
   </head>
   <body>
     <header>
@@ -759,7 +651,7 @@
         <h2>Klien Kami</h2>
         <button class="slider-btn left" data-dir="-1">&#8592;</button>
         <button class="slider-btn right" data-dir="1">&#8594;</button>
-        <div class="client-list" id="clientList">
+        <div class="client-list" id="clientList" data-type="kesehatan">
           <!-- klien akan diisi oleh JS -->
         </div>
       </section>

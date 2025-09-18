@@ -461,7 +461,11 @@ function handleHealthForm(event) {
   const diabetes = form.diabetes.value;
   // validasi sederhana: pastikan nama tidak kosong
   if (!fullName || !dob || !job) {
-    alert('Harap lengkapi semua data.');
+    const err = getOrCreateFormErrorEl(form);
+    if (err) {
+      err.textContent = 'Harap lengkapi semua data.';
+      err.style.display = 'block';
+    }
     return;
   }
   // hitung umur
@@ -517,7 +521,11 @@ function handleCarForm(event) {
   const rangka = form.rangka.value.trim();
   const pemilik = form.pemilik.value.trim();
   if (!merk || !jenis || !tahun || !harga || !plat || !mesin || !rangka || !pemilik) {
-    alert('Harap lengkapi semua data kendaraan.');
+    const err = getOrCreateFormErrorEl(form);
+    if (err) {
+      err.textContent = 'Harap lengkapi semua data kendaraan.';
+      err.style.display = 'block';
+    }
     return;
   }
   const currentYear = new Date().getFullYear();
@@ -563,7 +571,11 @@ function handleLifeForm(event) {
   const dob = form.dob.value;
   const coverage = parseFloat(form.coverage.value);
   if (!fullName || !dob || !coverage) {
-    alert('Harap lengkapi semua data.');
+    const err = getOrCreateFormErrorEl(form);
+    if (err) {
+      err.textContent = 'Harap lengkapi semua data.';
+      err.style.display = 'block';
+    }
     return;
   }
   const birthDate = new Date(dob);
@@ -752,18 +764,33 @@ function initSidenavDropdowns() {
 }
 
 function initClientSlider() {
-  const clients = [
-    { name: 'Andi Wijaya', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', asuransi: 'Rawat Inap' },
-    { name: 'Siti Rahma', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', asuransi: 'Kesehatan Keluarga' },
-    { name: 'Budi Santoso', avatar: 'https://randomuser.me/api/portraits/men/65.jpg', asuransi: 'Rawat Jalan' },
-    { name: 'Maria Ulfa', avatar: 'https://randomuser.me/api/portraits/women/68.jpg', asuransi: 'Rawat Inap' },
-    { name: 'Rizky Pratama', avatar: 'https://randomuser.me/api/portraits/men/12.jpg', asuransi: 'Kesehatan Keluarga' },
-    { name: 'Dewi Lestari', avatar: 'https://randomuser.me/api/portraits/women/21.jpg', asuransi: 'Rawat Jalan' },
-  ];
-
   const list = document.getElementById('clientList');
   if (!list) return; // no slider on this page
   let clientIndex = 0;
+
+  // choose client dataset based on data-type attribute on the container
+  const type = (list.getAttribute('data-type') || 'kesehatan').toLowerCase();
+  let clients = [];
+  if (type === 'mobil') {
+    // companies
+    clients = [
+      { name: 'PT. Trans Nusantara', avatar: 'images/logo/health_logo.png', asuransi: 'Fleet Management' },
+      { name: 'CV. Mitra Logistik', avatar: 'images/logo/health_logo.png', asuransi: 'Corporate Fleet' },
+      { name: 'PT. Sinar Raya', avatar: 'images/logo/health_logo.png', asuransi: 'Transport Fleet' },
+      { name: 'PT. Kargo Indonesia', avatar: 'images/logo/health_logo.png', asuransi: 'Logistics' },
+      { name: 'PT. Armada Sejahtera', avatar: 'images/logo/health_logo.png', asuransi: 'Commercial Vehicles' },
+    ];
+  } else {
+    // default / kesehatan / jiwa: use person-style clients
+    clients = [
+      { name: 'Andi Wijaya', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', asuransi: 'Rawat Inap' },
+      { name: 'Siti Rahma', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', asuransi: 'Kesehatan Keluarga' },
+      { name: 'Budi Santoso', avatar: 'https://randomuser.me/api/portraits/men/65.jpg', asuransi: 'Rawat Jalan' },
+      { name: 'Maria Ulfa', avatar: 'https://randomuser.me/api/portraits/women/68.jpg', asuransi: 'Rawat Inap' },
+      { name: 'Rizky Pratama', avatar: 'https://randomuser.me/api/portraits/men/12.jpg', asuransi: 'Kesehatan Keluarga' },
+      { name: 'Dewi Lestari', avatar: 'https://randomuser.me/api/portraits/women/21.jpg', asuransi: 'Rawat Jalan' },
+    ];
+  }
 
   function showClients() {
     list.innerHTML = '';
@@ -772,7 +799,10 @@ function initClientSlider() {
       const c = clients[idx];
       const card = document.createElement('div');
       card.className = 'client-card';
-      card.innerHTML = `<img src="${c.avatar}" alt="${c.name}" class="client-avatar"><div>${c.name}</div><div style='color:#2563eb; font-size:0.95rem; margin-top:0.3rem;'>${c.asuransi}</div>`;
+      // if this is a company dataset, mark avatar with .company so CSS can treat it like a logo
+      const isCompany = type === 'mobil';
+      const avatarClass = isCompany ? 'client-avatar company' : 'client-avatar';
+      card.innerHTML = `<img src="${c.avatar}" alt="${c.name}" class="${avatarClass}"><div>${c.name}</div><small style='color:#2563eb; font-size:0.95rem; margin-top:0.25rem;'>${c.asuransi}</small>`;
       list.appendChild(card);
     }
   }
@@ -818,7 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const premiForm = document.getElementById('premiForm');
   const compareBtn = document.getElementById('compareBtn');
   if (premiForm && compareBtn) {
-    compareBtn.addEventListener('click', () => {
+    setupCompareForm(premiForm, compareBtn, document.getElementById('premiumResult'), () => {
       const form = premiForm;
       const age = parseInt(form.age.value, 10) || 0;
       const smoke = form.querySelector('input[name="smoking"]:checked') ? form.querySelector('input[name="smoking"]:checked').value : 'Tidak';
@@ -835,7 +865,6 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="total"><div>Total Premi per Tahun</div><div>${formatRupiah(result.total)}</div></div>
       `;
       container.style.display = 'block';
-      // store current purchase for checkout flow
       const purchase = {
         product: 'Asuransi Kesehatan',
         plan: 'Kesehatan',
@@ -853,7 +882,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       };
       localStorage.setItem('currentPurchase', JSON.stringify(purchase));
-    });
+    }, { errorMessage: 'Harap lengkapi semua data.' });
   }
 
   // Health compare already wired above via computePremium
@@ -895,27 +924,80 @@ document.addEventListener('DOMContentLoaded', () => {
     return { age: computedAge, rate, monthly, annual: monthly * 12 };
   }
 
+  // Helper: create or return a form-level inline error element
+  function getOrCreateFormErrorEl(formEl) {
+    if (!formEl) return null;
+    let el = formEl.querySelector('.form-error');
+    if (!el) {
+      el = document.createElement('div');
+      el.className = 'form-error';
+      el.style.display = 'none';
+      formEl.insertBefore(el, formEl.firstChild);
+    }
+    return el;
+  }
+
+  // Helper: unify compare button behavior across forms
+  // options: { validateFn: () => boolean, errorMessage: string }
+  function setupCompareForm(formEl, btnEl, resEl, onCompare, options = {}) {
+    if (!formEl || !btnEl) return;
+    const opts = Object.assign({ errorMessage: 'Harap isi semua kolom pada formulir terlebih dahulu.' }, options);
+    const errorEl = getOrCreateFormErrorEl(formEl);
+
+    function updateState() {
+      const nativeValid = typeof formEl.checkValidity === 'function' ? formEl.checkValidity() : true;
+      const customValid = typeof opts.validateFn === 'function' ? !!opts.validateFn() : true;
+      const valid = nativeValid && customValid;
+      btnEl.disabled = !valid;
+      btnEl.classList.toggle('btn-disabled', !valid);
+      if (valid && errorEl) errorEl.style.display = 'none';
+    }
+
+    // initial state
+    updateState();
+
+    // update on user input
+    formEl.addEventListener('input', updateState);
+    formEl.addEventListener('change', updateState);
+
+    btnEl.addEventListener('click', (e) => {
+      const nativeValid = typeof formEl.checkValidity === 'function' ? formEl.checkValidity() : true;
+      const customValid = typeof opts.validateFn === 'function' ? !!opts.validateFn() : true;
+      const valid = nativeValid && customValid;
+      if (!valid) {
+        // show native messages when possible
+        if (typeof formEl.reportValidity === 'function') formEl.reportValidity();
+        if (errorEl) {
+          errorEl.textContent = opts.errorMessage;
+          errorEl.style.display = 'block';
+        }
+        return;
+      }
+      if (errorEl) errorEl.style.display = 'none';
+      // success handler provided by caller is responsible for rendering results and persisting purchase
+      try {
+        onCompare();
+      } catch (err) {
+        console.error('onCompare handler error', err);
+      }
+    });
+  }
+
   // Car compare button
   const carCompareFormEl = document.getElementById('carCompareForm');
   const carCompareBtnEl = document.getElementById('carCompareBtn');
   const carCompareResEl = document.getElementById('carCompareResult');
   if (carCompareFormEl && carCompareBtnEl) {
-    carCompareBtnEl.addEventListener('click', () => {
-      // validate required fields (jenis, tahun, harga)
+    setupCompareForm(carCompareFormEl, carCompareBtnEl, carCompareResEl, () => {
       const jenis = (carCompareFormEl.jenis && carCompareFormEl.jenis.value || '').trim();
       const tahun = carCompareFormEl.tahun && carCompareFormEl.tahun.value;
       const harga = parseFloat(carCompareFormEl.harga && carCompareFormEl.harga.value);
-      if (!jenis || !tahun || !harga) {
-        alert('Harap isi semua kolom pada formulir asuransi mobil terlebih dahulu.');
-        return;
-      }
       const premium = computeCarPremium({ tahun, harga });
       carCompareResEl.innerHTML = `<div class="line"><div>Perkiraan Premi per Tahun</div><div>${formatRupiah(premium)}</div></div>`;
       carCompareResEl.style.display = 'block';
-      // save purchase (only relevant details remain)
       const purchase = { product: 'Asuransi Mobil', plan: 'Mobil', user: getCurrentUser(), date: new Date().toISOString(), premium, status: 'Belum Dibayar', details: { jenis, tahun, harga } };
       localStorage.setItem('currentPurchase', JSON.stringify(purchase));
-    });
+    }, { errorMessage: 'Harap isi semua kolom pada formulir asuransi mobil terlebih dahulu.' });
   }
 
   // Life compare button
@@ -923,14 +1005,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const lifeCompareBtnEl = document.getElementById('lifeCompareBtn');
   const lifeCompareResEl = document.getElementById('lifeCompareResult');
   if (lifeCompareFormEl && lifeCompareBtnEl) {
-    lifeCompareBtnEl.addEventListener('click', () => {
+    setupCompareForm(lifeCompareFormEl, lifeCompareBtnEl, lifeCompareResEl, () => {
       const fullName = (lifeCompareFormEl.fullName && lifeCompareFormEl.fullName.value || '').trim();
       const age = lifeCompareFormEl.age && lifeCompareFormEl.age.value;
       const coverage = lifeCompareFormEl.coverage && lifeCompareFormEl.coverage.value;
-      if (!fullName || !age || !coverage) {
-        alert('Harap lengkapi semua kolom pada formulir asuransi jiwa terlebih dahulu.');
-        return;
-      }
       const result = computeLifePremium({ age, coverage });
       lifeCompareResEl.innerHTML = `
         <div class="line"><div>Usia</div><div>${result.age} tahun</div></div>
@@ -941,7 +1019,7 @@ document.addEventListener('DOMContentLoaded', () => {
       lifeCompareResEl.style.display = 'block';
       const purchase = { product: 'Asuransi Jiwa', plan: 'Jiwa', user: getCurrentUser(), date: new Date().toISOString(), premium: result.annual, status: 'Belum Dibayar', details: { fullName, age: parseInt(age, 10), coverage: parseFloat(coverage) } };
       localStorage.setItem('currentPurchase', JSON.stringify(purchase));
-    });
+    }, { errorMessage: 'Harap lengkapi semua kolom pada formulir asuransi jiwa terlebih dahulu.' });
   }
   const checkoutContainer = document.getElementById('checkoutContent');
   if (checkoutContainer) {
