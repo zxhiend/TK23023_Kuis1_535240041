@@ -404,9 +404,9 @@ label { display:inline-flex; align-items:center; }
   display:flex;
   gap:0.75rem;
   align-items:center;
-  padding:0.5rem 0 1rem 0;
-  border-bottom:1px solid #eef2ff;
-  margin-bottom:0.5rem;
+  /* keep spacing but remove bottom border to avoid duplicate separators;
+     .sidenav-group provides the single separating line via its border-top */
+  padding:0.5rem 0 0.75rem 0;
 }
 .sidenav-user .avatar {
   width:44px;
