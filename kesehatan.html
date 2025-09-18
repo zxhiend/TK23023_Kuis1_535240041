@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Asuransi Kesehatan</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style>
+      .benefit-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+      .benefit-item {
+        background: #efefef;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+        padding: 1.5rem;
+        text-align: center;
+        color: #2563eb;
+        font-weight: 500;
+        font-size: 1.05rem;
+        text-align: left;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: box-shadow 0.2s;
+      }
+      .benefit-item:hover {
+        box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15);
+        background-color: #eef5ff;
+        transition: 0.3s ease;
+      }
+      .client-slider {
+        max-width: 600px;
+        margin: 3rem auto 0 auto;
+        position: relative;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 2rem 1.5rem 1.5rem 1.5rem;
+        overflow: hidden;
+      }
+      .client-slider h2 {
+        text-align: center;
+        color: #2563eb;
+        margin-bottom: 1rem;
+      }
+      .client-list {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        transition: transform 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+      }
+      .client-card {
+        background: #f3f4f6;
+        border-radius: 8px;
+        box-shadow: 0 1px 4px rgba(37, 99, 235, 0.08);
+        padding: 1rem 1.5rem;
+        min-width: 180px;
+        text-align: center;
+        color: #1f2937;
+        font-size: 1rem;
+        font-weight: 500;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .client-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: #2563eb22;
+        margin-bottom: 0.5rem;
+        object-fit: cover;
+      }
+      .slider-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #2563eb;
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 2;
+        transition: background 0.2s;
+      }
+      .slider-btn:hover {
+        background: #1e40af;
+      }
+      .slider-btn.left {
+        left: 8px;
+      }
+      .slider-btn.right {
+        right: 8px;
+      }
+
+      @media (max-width: 700px) {
+        .client-list {
+          gap: 1rem;
+        }
+        .client-card {
+          min-width: 140px;
+          font-size: 0.95rem;
+        }
+        .client-slider {
+          padding: 1rem 0.5rem 1rem 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <div style="display: flex; align-items: center; gap: 8px">
+          <div class="logo">InSure&amp;Safe</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px">
+          <a
+            href="index.html"
+            aria-label="Beranda"
+            class="header-home"
+            style="
+              display: inline-flex;
+              align-items: center;
+              gap: 6px;
+              color: #fff;
+              text-decoration: none;
+              font-weight: 600;
+            "
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+            >
+              <path
+                d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8.5z"
+                stroke="#fff"
+                stroke-width="1.2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            <span>Beranda</span>
+          </a>
+          <button
+            id="menuBtn"
+            aria-label="Buka menu"
+            style="
+              background: transparent;
+              border: 0;
+              color: #fff;
+              font-size: 1.25rem;
+              cursor: pointer;
+            "
+          >
+            &#9776;
+          </button>
+        </div>
+      </div>
+      <!-- Sidenav -->
+      <aside
+        id="sidenav"
+        style="
+          position: fixed;
+          top: 0;
+          height: 100%;
+          background: #fff;
+          box-shadow: -8px 0 24px rgba(0, 0, 0, 0.12);
+          z-index: 9999;
+          transition: right 0.28s ease;
+          padding: 1.5rem;
+        "
+      >
+        <button
+          id="closeSidenav"
+          aria-label="Tutup menu"
+          style="
+            background: #2563eb;
+            color: #fff;
+            border: 0;
+            border-radius: 6px;
+            padding: 0.5rem 0.75rem;
+            cursor: pointer;
+            float: right;
+          "
+        >
+          &times;
+        </button>
+        <div style="clear: both; margin-top: 1rem">
+          <nav
+            class="sidenav-nav"
+            style="
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+              margin-top: 0.5rem;
+            "
+          >
+            <!-- user area will be updated by JS -->
+            <div class="sidenav-user" id="sidenavUser">
+              <div class="avatar" id="sidenavAvatar">
+                <img src="" alt="avatar" style="display: none" />
+              </div>
+              <div class="meta">
+                <div class="name" id="sidenavUserName">Belum login</div>
+                <div class="subtitle">Akun</div>
+              </div>
+              <div class="status" id="sidenavUserStatus"></div>
+            </div>
+
+            <div class="sidenav-group">
+              <button
+                class="sidenav-toggle"
+                aria-expanded="false"
+                type="button"
+              >
+                <span class="sidenav-icon">
+                  <!-- insurance icon -->
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M20 6L12 2 4 6v6c0 5 4 9 8 10 4-1 8-5 8-10V6z"
+                      stroke="#2563eb"
+                      stroke-width="1.1"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span>Asuransi</span>
+                <span class="sidenav-caret">▾</span>
+              </button>
+              <div class="sidenav-dropdown">
+                <a class="sidenav-link" href="kesehatan.html">Kesehatan</a>
+                <a class="sidenav-link" href="mobil.html">Mobil</a>
+                <a class="sidenav-link" href="jiwa.html">Jiwa</a>
+              </div>
+            </div>
+
+            <div class="sidenav-group">
+              <button
+                class="sidenav-toggle"
+                aria-expanded="false"
+                type="button"
+              >
+                <span class="sidenav-icon">
+                  <!-- account icon -->
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                      stroke="#2563eb"
+                      stroke-width="1.1"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                    <path
+                      d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+                      stroke="#2563eb"
+                      stroke-width="1.1"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span>Akun</span>
+                <span class="sidenav-caret">▾</span>
+              </button>
+              <div class="sidenav-dropdown">
+                <a id="loginLogoutLink" class="sidenav-link" href="login.html"
+                  ><span class="sidenav-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M15 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-4"
+                        stroke="#2563eb"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M10 17l5-5-5-5"
+                        stroke="#2563eb"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M15 12H3"
+                        stroke="#2563eb"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      /></svg></span
+                  >Login</a
+                >
+                <a class="sidenav-link" href="profile.html"
+                  ><span class="sidenav-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                        stroke="#2563eb"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+                        stroke="#2563eb"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      /></svg></span
+                  >Profil</a
+                >
+                <a class="sidenav-link" href="signup.html"
+                  ><span class="sidenav-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                        stroke="#2563eb"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"
+                        stroke="#2563eb"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      /></svg></span
+                  >Daftar</a
+                >
+                <a class="sidenav-link" href="history.html"
+                  ><span class="sidenav-icon">
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M12 8v4l3 3"
+                        stroke="#2563eb"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M12 3a9 9 0 1 0 9 9"
+                        stroke="#2563eb"
+                        stroke-width="1.2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      /></svg></span
+                  >Histori Pembelian</a
+                >
+              </div>
+            </div>
+          </nav>
+        </div>
+      </aside>
+      <div
+        id="sidenavOverlay"
+        style="
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.35);
+          opacity: 0;
+          visibility: hidden;
+          transition: opacity 0.28s ease;
+          z-index: 9998;
+        "
+      ></div>
+    </header>
+    <main>
+      <h1 style="text-align: center; margin-bottom: 2rem">
+        Asuransi Kesehatan
+      </h1>
+      <!-- Daftar Asuransi -->
+      <section style="margin-top: 2rem">
+        <h2 style="text-align: center; color: #2563eb; margin-bottom: 1rem">
+          Bandingkan Premi Asuransi Kesehatan
+        </h2>
+
+        <form
+          id="premiForm"
+          style="
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 4px 24px rgba(37, 99, 235, 0.08);
+            padding: 2rem 1.5rem;
+            max-width: 900px;
+            margin: 0 auto 2rem auto;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              gap: 1rem;
+              flex-wrap: wrap;
+              margin-bottom: 1rem;
+            "
+          >
+            <select
+              name="gender"
+              required
+              style="
+                flex: 1;
+                min-width: 180px;
+                padding: 0.75rem;
+                border-radius: 8px;
+                border: 1px solid #d1d5db;
+                font-size: 1rem;
+              "
+            >
+              <option value="" disabled selected>Jenis Kelamin</option>
+              <option value="Pria">Pria</option>
+              <option value="Wanita">Wanita</option>
+            </select>
+            <input
+              type="number"
+              name="age"
+              min="0"
+              max="120"
+              placeholder="Usia"
+              required
+              style="
+                flex: 1;
+                min-width: 120px;
+                padding: 0.75rem;
+                border-radius: 8px;
+                border: 1px solid #d1d5db;
+                font-size: 1rem;
+              "
+            />
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Nama Lengkap Sesuai KTP"
+              required
+              style="
+                flex: 2;
+                min-width: 180px;
+                padding: 0.75rem;
+                border-radius: 8px;
+                border: 1px solid #d1d5db;
+                font-size: 1rem;
+              "
+            />
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 1rem;
+              flex-wrap: wrap;
+              margin-bottom: 1rem;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                align-items: center;
+                background: #f3f4f6;
+                border-radius: 8px;
+                padding: 0 0.75rem;
+                min-width: 70px;
+                height: 48px;
+                font-weight: 600;
+                color: #2563eb;
+                font-size: 1.1rem;
+              "
+            >
+              +62
+            </div>
+            <input
+              type="tel"
+              name="phone"
+              placeholder="Nomor Telepon"
+              required
+              style="
+                flex: 1;
+                min-width: 160px;
+                padding: 0.75rem;
+                border-radius: 8px;
+                border: 1px solid #d1d5db;
+                font-size: 1rem;
+              "
+            />
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              required
+              style="
+                flex: 1;
+                min-width: 160px;
+                padding: 0.75rem;
+                border-radius: 8px;
+                border: 1px solid #d1d5db;
+                font-size: 1rem;
+              "
+            />
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 1rem;
+              flex-wrap: wrap;
+              align-items: flex-start;
+              margin-bottom: 1rem;
+            "
+          >
+            <fieldset
+              style="
+                flex: 1;
+                min-width: 180px;
+                border: 0;
+                padding: 0;
+                margin: 0;
+              "
+            >
+              <legend
+                style="font-size: 0.95rem; margin-bottom: 6px; color: #374151"
+              >
+                Merokok
+              </legend>
+              <div style="display: flex; gap: 0.75rem; align-items: center">
+                <label
+                  style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 0.95rem;
+                  "
+                >
+                  <input type="radio" name="smoking" value="Merokok" required />
+                  <span>Ya</span>
+                </label>
+                <label
+                  style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 0.95rem;
+                  "
+                >
+                  <input type="radio" name="smoking" value="TidakMerokok" />
+                  <span>Tidak</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset
+              style="
+                flex: 1;
+                min-width: 180px;
+                border: 0;
+                padding: 0;
+                margin: 0;
+              "
+            >
+              <legend
+                style="font-size: 0.95rem; margin-bottom: 6px; color: #374151"
+              >
+                Riwayat Hipertensi
+              </legend>
+              <div style="display: flex; gap: 0.75rem; align-items: center">
+                <label
+                  style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 0.95rem;
+                  "
+                >
+                  <input type="radio" name="hypertension" value="Ya" required />
+                  <span>Ya</span>
+                </label>
+                <label
+                  style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 0.95rem;
+                  "
+                >
+                  <input type="radio" name="hypertension" value="Tidak" />
+                  <span>Tidak</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset
+              style="
+                flex: 1;
+                min-width: 180px;
+                border: 0;
+                padding: 0;
+                margin: 0;
+              "
+            >
+              <legend
+                style="font-size: 0.95rem; margin-bottom: 6px; color: #374151"
+              >
+                Riwayat Diabetes
+              </legend>
+              <div style="display: flex; gap: 0.75rem; align-items: center">
+                <label
+                  style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 0.95rem;
+                  "
+                >
+                  <input type="radio" name="diabetic" value="Ya" required />
+                  <span>Ya</span>
+                </label>
+                <label
+                  style="
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                    font-size: 0.95rem;
+                  "
+                >
+                  <input type="radio" name="diabetic" value="Tidak" />
+                  <span>Tidak</span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+          <button
+            type="button"
+            id="compareBtn"
+            class="btn-01"
+            style="
+              display: block;
+              width: 100%;
+              margin-top: 0.5rem;
+              font-size: 1.1rem;
+              justify-content: center;
+            "
+          >
+            Bandingkan Sekarang &nbsp; →
+          </button>
+          <div
+            id="premiumResult"
+            style="
+              display: none;
+              background: #f8fafc;
+              margin-top: 1rem;
+              padding: 1rem;
+              border-radius: 8px;
+              color: #0f172a;
+            "
+          ></div>
+          <div
+            style="
+              text-align: center;
+              font-size: 0.95rem;
+              color: #4b5563;
+              margin-top: 0.75rem;
+            "
+          >
+            Dengan lanjut, Saya setuju
+            <a href="#" style="color: #2563eb; text-decoration: underline"
+              >syarat & ketentuan</a
+            >
+            berlaku
+          </div>
+        </form>
+      </section>
+      <section style="margin-top: 2.5rem">
+        <h2 style="text-align: center; color: #2563eb; margin-bottom: 1rem">
+          Daftarkan anggota keluarga Anda untuk melindunginya
+        </h2>
+        <div style="text-align: center; margin-top: 1rem">
+          <div style="display: flex; justify-content: center; width: 100%">
+            <div class="card" style="max-width: 520px; width: 100%">
+              <img src="images/health.svg" alt="Asuransi Kesehatan" />
+              <h3>Asuransi Kesehatan</h3>
+              <p>
+                Daftar untuk perlindungan kesehatan bagi keluarga Anda. Lengkapi
+                data anggota keluarga dan dapatkan rekomendasi premi yang
+                sesuai.
+              </p>
+              <a href="kesehatan_form.html" class="btn-01">Daftar</a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- Pilihan Produk Asuransi Lainnya -->
+      <section style="margin-top: 2.5rem">
+        <h2 style="text-align: center; color: #2563eb; margin-bottom: 1rem">
+          Pilihan Produk Asuransi Lainnya
+        </h2>
+        <div class="card-grid">
+          <div class="card">
+            <img src="images/car.svg" alt="Asuransi Mobil" />
+            <h3>Asuransi Mobil</h3>
+            <p>Perlindungan kendaraan Anda untuk berbagai risiko.</p>
+            <a href="mobil.html" class="btn-01">Lihat</a>
+          </div>
+          <div class="card">
+            <img src="images/life.svg" alt="Asuransi Jiwa" />
+            <h3>Asuransi Jiwa</h3>
+            <p>Perlindungan jiwa bagi Anda dan keluarga.</p>
+            <a href="jiwa.html" class="btn-01">Lihat</a>
+          </div>
+        </div>
+      </section>
+      <!-- Manfaat -->
+      <section style="margin-top: 3rem">
+        <h2 style="text-align: center; color: #2563eb; margin-bottom: 1rem">
+          Manfaat Asuransi Kesehatan
+        </h2>
+        <div class="benefit-list">
+          <div class="benefit-item">Perlindungan biaya medis tak terduga</div>
+          <div class="benefit-item">Akses rumah sakit & dokter terbaik</div>
+          <div class="benefit-item">Proses klaim mudah & cepat</div>
+          <div class="benefit-item">Perlindungan untuk keluarga</div>
+          <div class="benefit-item">
+            Bisa disesuaikan dengan kebutuhan & anggaran
+          </div>
+        </div>
+      </section>
+      <!-- Slider Klien -->
+      <section class="client-slider">
+        <h2>Klien Kami</h2>
+        <button class="slider-btn left" data-dir="-1">&#8592;</button>
+        <button class="slider-btn right" data-dir="1">&#8594;</button>
+        <div class="client-list" id="clientList">
+          <!-- klien akan diisi oleh JS -->
+        </div>
+      </section>
+    </main>
+    <script src="js/script.js"></script>
+  </body>
+</html>

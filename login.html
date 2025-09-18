@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - InSure&Safe</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="header-content">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div class="logo">InSure&Safe</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <a href="index.html" aria-label="Beranda" class="header-home" style="display:inline-flex; align-items:center; gap:6px; color:#fff; text-decoration:none; font-weight:600;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 11.5L12 4l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-8.5z" stroke="#fff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Beranda</span>
+          </a>
+          <button id="menuBtn" aria-label="Buka menu" style="background:transparent; border:0; color:#fff; font-size:1.25rem; cursor:pointer;">&#9776;</button>
+        </div>
+      </div>
+  <aside id="sidenav" style="position:fixed; top:0; height:100%; background:#fff; box-shadow:-8px 0 24px rgba(0,0,0,0.12); z-index:9999; transition:right 0.28s ease; padding:1.5rem;">
+        <button id="closeSidenav" aria-label="Tutup menu" style="background:#2563eb; color:#fff; border:0; border-radius:6px; padding:0.5rem 0.75rem; cursor:pointer; float:right;">&times;</button>
+        <div style="clear:both; margin-top:1rem;">
+          <nav class="sidenav-nav" style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.5rem;">
+            <div class="sidenav-user" id="sidenavUser">
+              <div class="avatar" id="sidenavAvatar"><img src="" alt="avatar" style="display:none;"></div>
+              <div class="meta">
+                <div class="name" id="sidenavUserName">Belum login</div>
+                <div class="subtitle">Akun</div>
+              </div>
+              <div class="status" id="sidenavUserStatus"></div>
+            </div>
+
+            <div class="sidenav-group">
+              <button class="sidenav-toggle" aria-expanded="false" type="button">
+                <span class="sidenav-icon"> <!-- insurance icon -->
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 6L12 2 4 6v6c0 5 4 9 8 10 4-1 8-5 8-10V6z" stroke="#2563eb" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span>Asuransi</span>
+                <span class="sidenav-caret">▾</span>
+              </button>
+              <div class="sidenav-dropdown">
+                <a class="sidenav-link" href="kesehatan.html"><span class="sidenav-icon"> <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.8 8.6a5.5 5.5 0 0 0-9.2-1.1L11 8l-0.6-0.5a5.5 5.5 0 1 0-7.3 8.2L11 21l8.8-4.3a5.5 5.5 0 0 0 1-8.1z" stroke="#2563eb" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Kesehatan</a>
+                <a class="sidenav-link" href="mobil.html"><span class="sidenav-icon"> <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 7h18v10H3z" stroke="#2563eb" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Mobil</a>
+                <a class="sidenav-link" href="jiwa.html"><span class="sidenav-icon"> <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2v6M5 9h14" stroke="#2563eb" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Jiwa</a>
+              </div>
+            </div>
+
+
+            <div class="sidenav-group">
+              <button class="sidenav-toggle" aria-expanded="false" type="button">
+                <span class="sidenav-icon"> <!-- account icon -->
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#2563eb" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="#2563eb" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span>Akun</span>
+                <span class="sidenav-caret">▾</span>
+              </button>
+              <div class="sidenav-dropdown">
+                <a id="loginLogoutLink" class="sidenav-link" href="login.html"><span class="sidenav-icon"> <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 3h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-4" stroke="#2563eb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 17l5-5-5-5" stroke="#2563eb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 12H3" stroke="#2563eb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Login</a>
+                <a class="sidenav-link" href="profile.html"><span class="sidenav-icon"> <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#2563eb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="#2563eb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Profil</a>
+                <a class="sidenav-link" href="signup.html"><span class="sidenav-icon"> <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="#2563eb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z" stroke="#2563eb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 8v6M23 11h-6" stroke="#2563eb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Daftar</a>
+                <a class="sidenav-link" href="history.html"><span class="sidenav-icon"> <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 8v4l3 3" stroke="#2563eb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 3a9 9 0 1 0 9 9" stroke="#2563eb" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Histori Pembelian</a>
+              </div>
+            </div>
+
+          </nav>
+        </div>
+      </aside>
+      <div id="sidenavOverlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.35); opacity:0; visibility:hidden; transition:opacity 0.28s ease; z-index:9998;"></div>
+    </header>
+    <main>
+      <form id="loginForm">
+        <h2>Login</h2>
+        <div class="form-message" style="display:none;"></div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="nama@example.com" />
+          <div class="error-message"></div>
+        </div>
+        <div class="form-group">
+          <label for="password">Kata Sandi</label>
+          <input type="password" id="password" name="password" placeholder="******" />
+          <div class="error-message"></div>
+        </div>
+        <button type="submit" class="submit-btn">Login</button>
+        <a class="link" href="signup.html">Belum punya akun? Sign up</a>
+      </form>
+    </main>
+    <script src="js/script.js"></script>
+  </body>
+</html>

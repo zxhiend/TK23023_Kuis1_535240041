@@ -1,0 +1,456 @@
+
+/*
+  Global resets and custom properties
+  ----------------------------------
+  Define a few CSS variables up front to allow the palette to be
+  adjusted from a single place.  Keeping colours and radii in
+  variables makes it trivial to tweak the look of the entire site
+  without hunting through dozens of selectors.  Default fonts are
+  modern system fonts which render crisply on all platforms.  The
+  overall line-height is set on the root to give breathing room
+  between lines of text.
+*/
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.5;
+}
+
+:root {
+  --primary-color: #2563eb;
+  --primary-dark: #1e40af;
+  --danger-color: #dc2626;
+  --bg-color: #f9fafb;
+  --card-bg: #ffffff;
+  --card-radius: 12px;
+  --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+body {
+  background-color: var(--bg-color);
+  color: #1f2937;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-content { /* biar header-nya full */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+header .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Header home button placed next to menu - nudge left a bit */
+.header-home {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-right: 25px; /* smaller gap to pull it left toward the logo */
+}
+
+@media (max-width: 600px) {
+  .header-home {
+    margin-right: 8px; /* slightly larger on small screens to avoid crowding */
+    font-size: 0.95rem;
+  }
+}
+
+/* Hover / focus transition for header home */
+.header-home {
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: background-color 180ms ease, transform 160ms ease;
+}
+.header-home svg { transition: stroke 180ms ease, transform 160ms ease; }
+.header-home:hover, .header-home:focus {
+  background-color: rgba(255,255,255,0.08);
+  transform: translateY(-1px);
+}
+.header-home:focus { outline: 2px solid rgba(255,255,255,0.16); outline-offset: 2px; }
+.header-home:hover svg path, .header-home:focus svg path { stroke: #ffffff; }
+
+header nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 1rem;
+  font-weight: 500;
+}
+
+header nav a:hover {
+  text-decoration: underline;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Home page cards */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+/*
+  Card component
+  --------------
+  Cards are used across the marketplace to represent insurance
+  products.  A larger border-radius and deeper shadow give each
+  element a subtle lift from the page.  A hover transform adds a
+  playful bounce when visitors explore the offerings.
+*/
+.card {
+  background-color: var(--card-bg);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.card img {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1rem;
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.card p {
+  flex: 1;
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin-bottom: 1rem;
+}
+
+/* template css button */
+/*
+  Primary button
+  --------------
+  Reuse the same button styles across the site.  Rounded corners
+  harmonise with the card radius.  A subtle elevation and darken
+  effect on hover encourage interaction without feeling heavy.
+*/
+.btn-01 {
+  background-color: var(--primary-color);
+  border-radius: 8px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-01:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (min-width: 768px) {
+  .btn-01 {
+    padding: 16px 44px;
+    min-width: 150px;
+  }
+}
+
+.card .btn-01 {
+  display: inline-block;
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.card .btn-01:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Forms */
+form {
+  background-color: var(--card-bg);
+  padding: 2rem;
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  max-width: 480px;
+  margin: 2rem auto;
+}
+
+form h2 {
+  margin-bottom: 1rem;
+  color: #111827;
+  text-align: center;
+}
+
+form .form-group {
+  margin-bottom: 1rem;
+}
+
+form label {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 500;
+}
+
+form input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+form input:focus {
+  border-color: #2563eb;
+  outline: none;
+}
+
+.error-message {
+  color: #dc2626;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.success-message {
+  color: #16a34a;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+form .submit-btn {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+form .submit-btn:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+}
+
+form .link {
+  display: block;
+  text-align: center;
+  margin-top: 0.75rem;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+form .link:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  header nav {
+    margin-top: 1rem;
+  }
+
+  main {
+    padding: 1rem;
+  }
+
+  form {
+    padding: 1.5rem;
+  }  
+}
+
+/* Sidenav global styles */
+#sidenav {
+  right: -280px; /* default hidden off-canvas */
+  width: 280px; /* slightly reduced width */
+}
+.sidenav-nav .sidenav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.5rem;
+  width: 100%;
+  color: #111827; /* ensure text is visible and doesn't inherit header color */
+  text-decoration: none;
+}
+.sidenav-icon {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+  flex: 0 0 20px;
+}
+
+/* ensure svg icons inside sidenav are vertically centered */
+.sidenav-icon svg { width:100%; height:100%; display:block; }
+
+/* Defensive rules to ensure sidenav icons are visible on all pages */
+.sidenav-nav .sidenav-link .sidenav-icon { display:inline-flex; align-items:center; justify-content:center; width:20px; height:20px; flex:0 0 20px; }
+.sidenav-nav .sidenav-link .sidenav-icon svg { width:20px; height:20px; display:block; }
+/* Force stroke color for typical shapes and ensure no accidental fill hides icons */
+.sidenav-nav .sidenav-link .sidenav-icon svg path,
+.sidenav-nav .sidenav-link .sidenav-icon svg circle,
+.sidenav-nav .sidenav-link .sidenav-icon svg rect {
+  stroke: var(--primary-color) !important;
+  fill: none !important;
+}
+
+/* Optional debug border (comment out in production) to verify icon container exists */
+/* .sidenav-nav .sidenav-link .sidenav-icon { border: 1px dashed rgba(37,99,235,0.15); } */
+
+/* Radio alignment helpers: make labels align center and inputs consistent */
+label input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin: 0 6px 0 0;
+}
+label { display:inline-flex; align-items:center; }
+
+/* Premium result styling */
+#premiumResult { font-size:0.95rem; line-height:1.4; }
+#premiumResult .line { display:flex; justify-content:space-between; padding:0.25rem 0; border-bottom:1px dashed #e6eefc; }
+#premiumResult .total { font-weight:700; color:var(--primary-dark); font-size:1.05rem; padding-top:0.5rem; }
+
+@media (max-width: 480px) {
+  #sidenav { width: 80%; right: -80%; }
+}
+
+/* Dropdown groups inside sidenav */
+.sidenav-nav .sidenav-group { border-top: 1px solid #eef2ff; padding-top: 0.5rem; }
+.sidenav-toggle {
+  display:flex;
+  align-items:center;
+  gap:0.75rem;
+  width:100%;
+  background:transparent;
+  border:0;
+  padding:0.5rem 0;
+  cursor:pointer;
+  font-weight:600;
+  color:#111827;
+  text-align:left;
+}
+.sidenav-toggle:hover { background:#f1f5f9; border-radius:6px; }
+.sidenav-caret { margin-left:auto; transition: transform 0.25s ease; color:#6b7280; }
+.sidenav-dropdown {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.28s ease, padding 0.2s ease;
+  padding-left: 0.5rem;
+  display:flex;
+  flex-direction:column;
+  gap:0.25rem;
+}
+.sidenav-dropdown .sidenav-link { padding: 0.4rem 0; padding-left: 0.25rem; font-size:0.95rem; color:#0f172a; }
+
+/* User area at top of sidenav */
+.sidenav-user {
+  display:flex;
+  gap:0.75rem;
+  align-items:center;
+  padding:0.5rem 0 1rem 0;
+  border-bottom:1px solid #eef2ff;
+  margin-bottom:0.5rem;
+}
+.sidenav-user .avatar {
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  background:#e5e7eb;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.sidenav-user .avatar img { width:100%; height:100%; object-fit:cover; display:block; }
+.sidenav-user .meta { display:flex; flex-direction:column; }
+.sidenav-user .meta .name { font-weight:700; color:#0f172a; }
+.sidenav-user .meta .subtitle { font-size:0.9rem; color:#6b7280; }
+
+/* status dot: gray when offline, blinking green when online */
+.sidenav-user .status {
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#9ca3af; /* gray by default */
+  box-shadow:0 0 0 2px rgba(156,163,175,0.12);
+  margin-left:auto;
+}
+.sidenav-user .status.blink {
+  background:#16a34a;
+  animation:blink 1.6s infinite;
+  box-shadow:0 0 6px rgba(16,185,129,0.35);
+}
+@keyframes blink {
+  0% { transform: scale(1); opacity:1; }
+  50% { transform: scale(1.15); opacity:0.7; }
+  100% { transform: scale(1); opacity:1; }
+}
+.sidenav-group.open .sidenav-dropdown { max-height: 240px; padding-bottom: 0.5rem; }
+.sidenav-group.open .sidenav-caret { transform: rotate(180deg); }
+
+.sidenav-nav .sidenav-link:hover { background:#f8fafc; border-radius:6px; padding-left:0.25rem; }
+
+/* Visual hierarchy: group headers larger, dropdown items slightly smaller */
+.sidenav-toggle { font-size:1.05rem; }
+.sidenav-dropdown .sidenav-link { font-size:0.95rem; padding-left:0.5rem; }
+
+/* Beranda */
+.top-home { margin-bottom:0.5rem; font-size:1.05rem; font-weight:700; padding:0.6rem 0.5rem; }
+.top-home .sidenav-icon { margin-right:0.6rem; }
