@@ -670,12 +670,13 @@ function loadHistoryPage() {
   tbody.innerHTML = '';
   filtered.forEach((item) => {
     const tr = document.createElement('tr');
+    // use data-label attributes so CSS can display a stacked label/value layout on small screens
     tr.innerHTML = `
-      <td style="padding:0.6rem; border-bottom:1px solid #e5e7eb;">${item.product}</td>
-      <td style="padding:0.6rem; border-bottom:1px solid #e5e7eb;">${item.plan}</td>
-      <td style="padding:0.6rem; border-bottom:1px solid #e5e7eb;">${new Date(item.date).toLocaleDateString('id-ID')}</td>
-      <td style="padding:0.6rem; border-bottom:1px solid #e5e7eb;">${formatRupiah(item.premium)}</td>
-      <td style="padding:0.6rem; border-bottom:1px solid #e5e7eb;">${item.status}</td>
+      <td data-label="Produk">${item.product}</td>
+      <td data-label="Jenis">${item.plan}</td>
+      <td data-label="Tanggal Pembelian">${new Date(item.date).toLocaleDateString('id-ID')}</td>
+      <td data-label="Harga">${formatRupiah(item.premium)}</td>
+      <td data-label="Status">${item.status}</td>
     `;
     tbody.appendChild(tr);
   });

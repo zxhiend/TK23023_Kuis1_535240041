@@ -399,6 +399,42 @@ label { display:inline-flex; align-items:center; }
 }
 .sidenav-dropdown .sidenav-link { padding: 0.4rem 0; padding-left: 0.25rem; font-size:0.95rem; color:#0f172a; }
 
+/* History table defaults */
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.history-table thead tr { background: #f3f4f6; }
+.history-table th, .history-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: top;
+}
+
+/* Make table container horizontally scrollable on very small widths while also offering a stacked layout */
+.table-responsive {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Mobile: transform table rows into stacked cards with label/value pairs */
+@media (max-width: 640px) {
+  .history-table thead { display: none; }
+  .history-table, .history-table tbody, .history-table tr, .history-table td { display: block; width: 100%; }
+  .history-table tr { margin-bottom: 0.85rem; background: #ffffff; padding: 0.75rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+  .history-table td { border: 0; padding: 0.5rem 0; }
+  .history-table td::before {
+    content: attr(data-label) ": ";
+    font-weight: 700;
+    color: #374151;
+    display: inline-block;
+    width: 46%;
+    box-sizing: border-box;
+  }
+  .history-table td { display: flex; justify-content: space-between; gap: 8px; }
+}
+
 /* User area at top of sidenav */
 .sidenav-user {
   display:flex;
