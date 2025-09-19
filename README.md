@@ -11,3 +11,9 @@ Halaman utama
 - `profile.html`, `login.html`, `signup.html`, `history.html` — Halaman akun dan histori
 
 Akses di [SINI](https://zxhiend.github.io/TK23023_Kuis1_535240041/)
+
+# Masalah umum
+Kalo terdapat bug terhadap session aplikasi/akun sudah terdaftar, dan semacamnya, lakukan reset data yang terdapat pada `Local storage`.
+
+<img width="1119" height="250" alt="image" src="https://github.com/user-attachments/assets/30fe6494-95f8-4105-82cb-9045f60d788d" />
+
