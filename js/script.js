@@ -54,6 +54,45 @@ function saveUsers(users) {
   localStorage.setItem('users', JSON.stringify(toSave)); // simpan data user ke localStorage
 }
 
+// Helper: produce a SHA-256 hex digest of a password using SubtleCrypto
+async function hashPassword(password) {
+  if (typeof password !== 'string') return '';
+  // normalize to UTF-8 bytes
+  const enc = new TextEncoder();
+  const data = enc.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  // convert buffer to hex string
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
+function isHashedPassword(pw) {
+  return typeof pw === 'string' && /^[a-f0-9]{64}$/i.test(pw);
+}
+
+// Migrate any plaintext passwords in localStorage to hashed form
+async function migrateStoredPasswords() {
+  try {
+    const users = getUsers();
+    let changed = false;
+    for (let i = 0; i < users.length; i++) {
+      const u = users[i];
+      if (!u || typeof u !== 'object') continue;
+      if (!u.password) continue;
+      if (!isHashedPassword(u.password)) {
+        // password currently stored in plaintext -> hash and replace
+        const hashed = await hashPassword(String(u.password));
+        users[i].password = hashed;
+        changed = true;
+      }
+    }
+    if (changed) saveUsers(users);
+  } catch (err) {
+    console.warn('migrateStoredPasswords error', err);
+  }
+}
+
 /**
  * @param {HTMLElement} container
  * @param {string} message
@@ -152,12 +191,15 @@ function handleSignup(event) {
     return;
   }
 
-  // simpan user baru
-  users.push({ email, password, fullName, phone });
-  saveUsers(users);
-
-  showMessage(msgContainer, 'Registrasi berhasil! Silakan login.');
-  form.reset();
+  // simpan user baru (simpan hash password bukan plaintext)
+  const saveNewUser = async () => {
+    const hashed = await hashPassword(password);
+    users.push({ email, password: hashed, fullName, phone });
+    saveUsers(users);
+    showMessage(msgContainer, 'Registrasi berhasil! Silakan login.');
+    form.reset();
+  };
+  saveNewUser();
 }
 
 /**
@@ -193,21 +235,24 @@ function handleLogin(event) {
   }
   if (hasError) return;
 
-  // cek email dan password
-  const users = getUsers();
-  const match = users.find((u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password);
-  if (match) {
-    showMessage(msgContainer, `Selamat datang, ${match.fullName}! Login berhasil.`);
-    // simpan sesi pengguna saat login
-    setCurrentUser(match.email);
-    form.reset();
-    // setelah login berhasil, arahkan ke beranda
-    setTimeout(() => {
-      window.location.href = 'index.html';
-    }, 800);
-  } else {
-    showMessage(msgContainer, 'Email atau kata sandi salah.', false);
-  }
+  // cek email dan password (bandingkan hash)
+  (async () => {
+    const users = getUsers();
+    const hashedInput = await hashPassword(password);
+    const match = users.find((u) => u.email && u.email.toLowerCase() === email.toLowerCase() && u.password === hashedInput);
+    if (match) {
+      showMessage(msgContainer, `Selamat datang, ${match.fullName}! Login berhasil.`);
+      // simpan sesi pengguna saat login
+      setCurrentUser(match.email);
+      form.reset();
+      // setelah login berhasil, arahkan ke beranda
+      setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 800);
+    } else {
+      showMessage(msgContainer, 'Email atau kata sandi salah.', false);
+    }
+  })();
 }
 
 // fungsi untuk mengatur dan mendapatkan sesi pengguna
@@ -345,7 +390,7 @@ function loadProfilePageIfPresent() {
   const saveBtn = document.getElementById('saveProfileBtn');
   const cancelBtn = document.getElementById('cancelProfileBtn');
   if (saveBtn) {
-    saveBtn.addEventListener('click', () => {
+    saveBtn.addEventListener('click', async () => {
       // validations
       const newFullName = fullNameInput.value.trim();
       const newEmail = emailInput.value.trim().toLowerCase();
@@ -373,15 +418,33 @@ function loadProfilePageIfPresent() {
       // if changing password, verify old password
       if (newPass) {
         if (!oldPass) { const el = document.getElementById('profilePasswordError'); el.textContent = 'Masukkan kata sandi lama untuk mengganti kata sandi.'; el.style.display = 'block'; return; }
-        if (user.password !== oldPass) { const el = document.getElementById('profilePasswordError'); el.textContent = 'Kata sandi lama salah.'; el.style.display = 'block'; return; }
-        if (newPass.length < 8) { const el = document.getElementById('profilePasswordError'); el.textContent = 'Kata sandi baru minimal 8 karakter.'; el.style.display = 'block'; return; }
+        // compare hashed old password (support migrated plain-text users too)
+        const verifyOld = async () => {
+          const stored = usersNow[userIndex] && usersNow[userIndex].password ? usersNow[userIndex].password : '';
+          const oldIsHashed = isHashedPassword(stored);
+          if (oldIsHashed) {
+            const hashedOld = await hashPassword(oldPass);
+            if (hashedOld !== stored) { const el = document.getElementById('profilePasswordError'); el.textContent = 'Kata sandi lama salah.'; el.style.display = 'block'; return false; }
+          } else {
+            // legacy: stored plaintext (unlikely after migration) - compare directly
+            if (oldPass !== stored) { const el = document.getElementById('profilePasswordError'); el.textContent = 'Kata sandi lama salah.'; el.style.display = 'block'; return false; }
+          }
+          if (newPass.length < 8) { const el = document.getElementById('profilePasswordError'); el.textContent = 'Kata sandi baru minimal 8 karakter.'; el.style.display = 'block'; return false; }
+          return true;
+        };
+        const ok = await verifyOld();
+        if (!ok) return;
       }
 
       // apply changes
       usersNow[userIndex].fullName = newFullName;
       usersNow[userIndex].email = newEmail;
       if (avatarData) usersNow[userIndex].avatar = avatarData;
-      if (newPass) usersNow[userIndex].password = newPass;
+      if (newPass) {
+        // store hashed new password
+        const hashedNew = await hashPassword(newPass);
+        usersNow[userIndex].password = hashedNew;
+      }
       saveUsers(usersNow);
       // update session if email changed
       setCurrentUser(newEmail);
@@ -821,7 +884,9 @@ function initClientSlider() {
   showClients();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // migrate any legacy plaintext passwords to hashed values first
+  try { await migrateStoredPasswords(); } catch (e) { /* silent */ }
   // render user info if sidenav is present
   try { renderSidenavUserInfo(); } catch (e) { /* silent */ }
   try { loadProfilePageIfPresent(); } catch (e) { /* silent */ }
