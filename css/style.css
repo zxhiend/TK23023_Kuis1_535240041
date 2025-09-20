@@ -1,15 +1,4 @@
-
-/*
-  Global resets and custom properties
-  ----------------------------------
-  Define a few CSS variables up front to allow the palette to be
-  adjusted from a single place.  Keeping colours and radii in
-  variables makes it trivial to tweak the look of the entire site
-  without hunting through dozens of selectors.  Default fonts are
-  modern system fonts which render crisply on all platforms.  The
-  overall line-height is set on the root to give breathing room
-  between lines of text.
-*/
+/* Global styles */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -48,7 +37,7 @@ header {
   z-index: 100;
 }
 
-.header-content { /* biar header-nya full */
+.header-content { /* make header full */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -116,14 +105,6 @@ main {
   margin-top: 2rem;
 }
 
-/*
-  Card component
-  --------------
-  Cards are used across the marketplace to represent insurance
-  products.  A larger border-radius and deeper shadow give each
-  element a subtle lift from the page.  A hover transform adds a
-  playful bounce when visitors explore the offerings.
-*/
 .card {
   background-color: var(--card-bg);
   border-radius: var(--card-radius);
@@ -159,14 +140,6 @@ main {
   margin-bottom: 1rem;
 }
 
-/* template css button */
-/*
-  Primary button
-  --------------
-  Reuse the same button styles across the site.  Rounded corners
-  harmonise with the card radius.  A subtle elevation and darken
-  effect on hover encourage interaction without feeling heavy.
-*/
 .btn-01 {
   background-color: var(--primary-color);
   border-radius: 8px;
@@ -398,6 +371,35 @@ label { display:inline-flex; align-items:center; }
   gap:0.25rem;
 }
 .sidenav-dropdown .sidenav-link { padding: 0.4rem 0; padding-left: 0.25rem; font-size:0.95rem; color:#0f172a; }
+
+/* === Profile: danger / delete account button ===
+   Placed at the bottom of profile form next to other action buttons.
+   Use a compact style that visually stands out but aligns with the form layout.
+*/
+.danger-btn {
+  background: transparent;
+  border: 1px solid var(--danger-color);
+  color: var(--danger-color);
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease, transform 120ms ease;
+  display: inline-block;
+}
+.danger-btn:hover { background: rgba(220,38,38,0.06); transform: translateY(-1px); }
+
+/* Ensure the form action buttons (save/cancel/delete) sit nicely in a row on wider screens
+   and stack on small screens. The profile HTML places buttons inline; style ensures coherence. */
+.form-actions { display:flex; gap:0.75rem; align-items:center; justify-content:flex-start; margin-top:0.75rem; }
+@media (max-width:520px) {
+  .form-actions { flex-direction:column; align-items:stretch; }
+  .form-actions .danger-btn { margin-left:0; }
+}
+
+/* Small helper to keep delete button visually smaller when inserted next to large primary button */
+.form-actions .danger-btn { padding:0.55rem 0.75rem; font-size:0.95rem; }
+
 
 /* History table defaults */
 .history-table {

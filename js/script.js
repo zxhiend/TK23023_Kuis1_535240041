@@ -26,7 +26,7 @@ function isValidPhone(phone) {
 
 function getUsers() {
   try {
-    const data = localStorage.getItem('users'); // ngambil data user dari localStorage
+    const data = localStorage.getItem('users'); // get user data from localStorage
     if (!data) return [];
     const parsed = JSON.parse(data);
     // normalize: ensure we always return an array of user objects
@@ -51,9 +51,10 @@ function getUsers() {
 function saveUsers(users) {
   // make sure we store an array
   const toSave = Array.isArray(users) ? users : [users];
-  localStorage.setItem('users', JSON.stringify(toSave)); // simpan data user ke localStorage
+  localStorage.setItem('users', JSON.stringify(toSave)); // save user data to localStorage
 }
 
+// to prevent storing plaintext password in localStorage
 // Helper: produce a SHA-256 hex digest of a password using SubtleCrypto
 async function hashPassword(password) {
   if (typeof password !== 'string') return '';
@@ -175,13 +176,21 @@ function handleSignup(event) {
   if (hasError) return;
 
   // cek email sudah terdaftar (defensive)
-  const users = getUsers();
-  const normalizedEmail = email.toLowerCase();
+  // reload users (in case another tab changed storage) and normalize comparisons
+  let users = getUsers();
+  const normalizedEmail = String(email).trim().toLowerCase();
   console.debug('handleSignup: users from storage:', users);
   console.debug('handleSignup: normalizedEmail:', normalizedEmail);
   const existing = users.find((u) => {
     try {
-      return u && typeof u === 'object' && typeof u.email === 'string' && u.email.toLowerCase() === normalizedEmail;
+      if (!u) return false;
+      // legacy: user might be stored as a plain string (just the email)
+      if (typeof u === 'string') return u.trim().toLowerCase() === normalizedEmail;
+      // usual case: object with email property
+      if (typeof u === 'object' && u.email) return String(u.email).trim().toLowerCase() === normalizedEmail;
+      // fallback: some data might use 'username' or other field -> ignore unless it matches
+      if (typeof u === 'object' && u.username) return String(u.username).trim().toLowerCase() === normalizedEmail;
+      return false;
     } catch (err) {
       return false;
     }
@@ -194,10 +203,14 @@ function handleSignup(event) {
   // simpan user baru (simpan hash password bukan plaintext)
   const saveNewUser = async () => {
     const hashed = await hashPassword(password);
-    users.push({ email, password: hashed, fullName, phone });
+    // re-load users one more time to avoid race conditions, then push
+    users = getUsers();
+    users.push({ email: String(email).trim(), password: hashed, fullName, phone });
     saveUsers(users);
     showMessage(msgContainer, 'Registrasi berhasil! Silakan login.');
     form.reset();
+    // redirect to login page after short delay so user sees the message
+    setTimeout(() => { window.location.href = 'login.html'; }, 900);
   };
   saveNewUser();
 }
@@ -389,6 +402,22 @@ function loadProfilePageIfPresent() {
 
   const saveBtn = document.getElementById('saveProfileBtn');
   const cancelBtn = document.getElementById('cancelProfileBtn');
+  // create or locate delete account button
+  let deleteBtn = document.getElementById('deleteAccountBtn');
+  if (!deleteBtn) {
+    // try to place it next to cancel button if present
+    deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.id = 'deleteAccountBtn';
+    deleteBtn.className = 'danger-btn';
+    deleteBtn.textContent = 'Hapus Akun';
+    deleteBtn.style.marginLeft = '0.5rem';
+    if (cancelBtn && cancelBtn.parentNode) {
+      cancelBtn.parentNode.insertBefore(deleteBtn, cancelBtn.nextSibling);
+    } else if (saveBtn && saveBtn.parentNode) {
+      saveBtn.parentNode.appendChild(deleteBtn);
+    }
+  }
   if (saveBtn) {
     saveBtn.addEventListener('click', async () => {
       // validations
@@ -454,6 +483,23 @@ function loadProfilePageIfPresent() {
     });
   }
   if (cancelBtn) { cancelBtn.addEventListener('click', () => { window.location.href = 'index.html'; }); }
+  if (deleteBtn) {
+    deleteBtn.addEventListener('click', () => {
+      // confirm destructive action
+      const ok = confirm('Anda yakin ingin menghapus akun ini? Tindakan ini tidak dapat dibatalkan.');
+      if (!ok) return;
+      // remove user from storage
+      const allUsers = getUsers();
+      const remaining = allUsers.filter((u) => !(u && u.email && u.email.toLowerCase() === currentEmail.toLowerCase()));
+      saveUsers(remaining);
+      // clear session and rerender
+      logoutUser();
+      renderSidenavUserInfo();
+      alert('Akun berhasil dihapus.');
+      // redirect to homepage
+      window.location.href = 'index.html';
+    });
+  }
 }
 
 // fungsi memastikan user sudah login sebelum mengakses halaman tertentu
@@ -746,7 +792,14 @@ function loadHistoryPage() {
 }
 
 // inisialisasi event listener setelah dom siap
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // ensure stored users are migrated (hash plaintext passwords, normalize shapes) before using forms
+  try {
+    await migrateStoredPasswords();
+  } catch (err) {
+    console.warn('Error migrating stored passwords on startup', err);
+  }
+
   const signupForm = document.getElementById('signupForm');
   if (signupForm) {
     signupForm.addEventListener('submit', handleSignup);
