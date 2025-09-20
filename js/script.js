@@ -250,20 +250,31 @@ function handleLogin(event) {
 
   // cek email dan password (bandingkan hash)
   (async () => {
-    const users = getUsers();
-    const hashedInput = await hashPassword(password);
-    const match = users.find((u) => u.email && u.email.toLowerCase() === email.toLowerCase() && u.password === hashedInput);
-    if (match) {
-      showMessage(msgContainer, `Selamat datang, ${match.fullName}! Login berhasil.`);
-      // simpan sesi pengguna saat login
-      setCurrentUser(match.email);
-      form.reset();
-      // setelah login berhasil, arahkan ke beranda
-      setTimeout(() => {
-        window.location.href = 'index.html';
-      }, 800);
-    } else {
-      showMessage(msgContainer, 'Email atau kata sandi salah.', false);
+    try {
+      const users = getUsers();
+      const hashedInput = await hashPassword(password);
+      const match = users.find((u) => u && u.email && u.email.toLowerCase() === email.toLowerCase() && u.password === hashedInput);
+      if (match) {
+        showMessage(msgContainer, `Selamat datang, ${match.fullName}! Login berhasil.`);
+        // simpan sesi pengguna saat login
+        setCurrentUser(match.email);
+        form.reset();
+        // setelah login berhasil, arahkan ke beranda
+        setTimeout(() => { window.location.href = 'index.html'; }, 800);
+      } else {
+        // show error, clear password, focus, then reload after short delay to avoid stuck form
+        showMessage(msgContainer, 'Email atau kata sandi salah.', false);
+        const pwdEl = form.password;
+        if (pwdEl) { pwdEl.value = ''; pwdEl.focus(); }
+        // reload after short delay so user can read the message
+        setTimeout(() => { window.location.reload(); }, 1200);
+      }
+    } catch (err) {
+      console.warn('login flow error', err);
+      showMessage(msgContainer, 'Terjadi kesalahan saat proses login. Silakan coba lagi.', false);
+      const pwdEl = form.password;
+      if (pwdEl) { pwdEl.value = ''; pwdEl.focus(); }
+      setTimeout(() => { window.location.reload(); }, 1200);
     }
   })();
 }
